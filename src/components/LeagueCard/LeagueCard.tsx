@@ -146,6 +146,8 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                     {currentBadge && currentBadge.strBadge && (
                       <div className="relative">
                         <LazyImage
+                          width={100}
+                          height={100}
                           src={currentBadge.strBadge}
                           alt={`Season ${currentBadge.strSeason} badge - ${league.strLeague}`}
                           className="max-w-full h-auto max-h-32 mx-auto rounded-lg shadow-lg"

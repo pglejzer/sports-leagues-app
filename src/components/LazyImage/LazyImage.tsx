@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Loader2 } from "lucide-react";
 
 interface LazyImageProps {
@@ -8,6 +9,9 @@ interface LazyImageProps {
   alt: string;
   className?: string;
   fallback?: React.ReactNode;
+  width: number;
+  height: number;
+  priority?: boolean;
 }
 
 export const LazyImage = ({
@@ -15,6 +19,9 @@ export const LazyImage = ({
   alt,
   className = "",
   fallback,
+  width,
+  height,
+  priority = false,
 }: LazyImageProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -32,26 +39,28 @@ export const LazyImage = ({
   }
 
   return (
-    <div className="relative">
+    <div className={`relative ${className}`} style={{ width, height }}>
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       )}
-
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={width}
+        height={height}
+        priority={priority}
         className={`transition-opacity duration-200 ${
           loading ? "opacity-0" : "opacity-100"
-        } ${className}`}
-        onLoad={() => setLoading(false)}
+        }`}
+        onLoadingComplete={() => setLoading(false)}
         onError={() => {
           setLoading(false);
           setError(true);
         }}
-        loading="lazy"
       />
     </div>
   );
 };
+
