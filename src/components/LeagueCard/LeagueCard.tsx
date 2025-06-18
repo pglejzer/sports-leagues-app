@@ -177,7 +177,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mb-4 p-3 rounded-lg border border-slate-600/20 league-alternative-bg">
             <span className="text-slate-500">Alternative:</span>
             <span className="text-slate-300 font-medium">
-              {league.strLeagueAlternate || "Brak informacji o alternatywach"}
+              {league.strLeagueAlternate || "No alternative name available"}
             </span>
           </div>
 
@@ -187,16 +187,14 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                 <div className="flex items-center justify-center py-8 space-x-3">
                   <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
                   <span className="text-sm text-slate-400">
-                    Ładowanie odznak...
+                    Loading badges...
                   </span>
                 </div>
               )}
 
               {error && (
                 <div className="text-center py-6">
-                  <p className="text-sm text-red-400">
-                    Nie udało się załadować odznak sezonowych
-                  </p>
+                  <p className="text-sm text-red-400">Failed to load badges</p>
                 </div>
               )}
 
@@ -207,7 +205,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                       <div className="flex items-center space-x-2 text-slate-400">
                         <Calendar className="h-4 w-4 text-blue-400" />
                         <span className="text-slate-300">
-                          Sezon: {currentBadge?.strSeason}
+                          Season: {currentBadge?.strSeason}
                         </span>
                       </div>
                       <span className="text-slate-500">
@@ -220,14 +218,14 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                         <button
                           onClick={handlePrevBadge}
                           className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50 league-button-bg"
-                          title="Poprzedni sezon"
+                          title="Previous season"
                         >
                           <ChevronLeft className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
                         </button>
                         <button
                           onClick={handleNextBadge}
                           className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50 league-button-bg"
-                          title="Następny sezon"
+                          title="Next season"
                         >
                           <ChevronRight className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
                         </button>
@@ -242,12 +240,12 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                           width={100}
                           height={100}
                           src={currentBadge.strBadge}
-                          alt={`Odznaka sezonu ${currentBadge.strSeason} - ${league.strLeague}`}
+                          alt={`Badge of the season ${currentBadge.strSeason} - ${league.strLeague}`}
                           className="max-w-full h-auto max-h-32 mx-auto rounded-lg"
                           fallback={
                             <div className="text-center py-4">
                               <p className="text-sm text-red-400">
-                                Nie udało się załadować odznaki
+                                Failed to load badge
                               </p>
                             </div>
                           }
@@ -263,7 +261,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                         <div className="flex items-center justify-center mb-2">
                           <span className="text-xs text-slate-500 bg-slate-800/50 px-2 py-1 rounded-full">
                             {badges.length > 7
-                              ? `${currentBadgeIndex + 1} z ${badges.length}`
+                              ? `${currentBadgeIndex + 1} of ${badges.length}`
                               : ""}
                           </span>
                         </div>
@@ -287,7 +285,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                                   ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
                                   : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
                               }`}
-                              title={`Sezon ${badge.strSeason}`}
+                              title={`Season ${badge.strSeason}`}
                             />
                           ))
                         ) : (
@@ -297,7 +295,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                                 <button
                                   onClick={(e) => handleDotClick(0, e)}
                                   className="w-2 h-2 rounded-full transition-all duration-200 border border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive flex-shrink-0"
-                                  title={`Sezon ${badges[0].strSeason}`}
+                                  title={`Season ${badges[0].strSeason}`}
                                 />
                                 <span className="text-slate-500 text-xs">
                                   ...
@@ -314,7 +312,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                                     ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
                                     : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
                                 }`}
-                                title={`Sezon ${badges[index].strSeason}`}
+                                title={`Season ${badges[index].strSeason}`}
                               />
                             ))}
 
@@ -328,7 +326,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                                     handleDotClick(badges.length - 1, e)
                                   }
                                   className="w-2 h-2 rounded-full transition-all duration-200 border border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive flex-shrink-0"
-                                  title={`Sezon ${
+                                  title={`Season ${
                                     badges[badges.length - 1].strSeason
                                   }`}
                                 />
@@ -345,9 +343,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
               {badges.length === 0 && !isLoading && !error && (
                 <div className="text-center py-8 space-y-3">
                   <Sparkles className="h-8 w-8 text-gray-500 mx-auto opacity-50" />
-                  <p className="text-sm text-slate-500">
-                    Brak dostępnych odznak sezonowych
-                  </p>
+                  <p className="text-sm text-slate-500">No badges available</p>
                 </div>
               )}
             </div>
