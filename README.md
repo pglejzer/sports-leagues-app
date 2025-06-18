@@ -123,6 +123,37 @@ The app integrates with **TheSportsDB API**:
 - **Accessibility** - Semantic HTML and ARIA
 - **Lazy loading** - Progressive data loading with pagination
 
+## 🎯 Design Decisions
+
+### Layout Philosophy
+
+The design approach was guided by **simplicity and functionality**:
+
+- **Simple, fast layout** - Prioritized quick loading and intuitive navigation
+- **Mobile-first responsive design** - Ensures optimal experience across all devices
+- **Clean grid system** - Organized content presentation without clutter
+- **Consistent spacing** - Harmonious visual rhythm throughout the application
+
+### Glassmorphism Style Choice
+
+The **Glassmorphism** design style was chosen for several key reasons:
+
+- **🔍 Modern aesthetics** - Contemporary, professional appearance that feels current
+- **✨ Visual appeal** - Elegant frosted glass effects with subtle transparency
+- **📱 Cross-platform consistency** - Looks equally stunning on mobile and desktop
+- **🎨 Professional presentation** - Clean, sophisticated visual language
+- **⚡ Performance-friendly** - CSS-based effects that don't compromise loading speed
+
+### Key Visual Elements
+
+- **Backdrop blur effects** - Creates depth and visual hierarchy
+- **Gradient overlays** - Subtle color transitions for visual interest
+- **Soft shadows** - Gentle depth without harsh contrasts
+- **Rounded corners** - Friendly, approachable component styling
+- **Smooth transitions** - Polished interactions and state changes
+
+This design approach ensures the application looks **simple, beautiful, professional, and modern** while maintaining excellent usability across all devices.
+
 ## 🔧 Configuration
 
 ### Tailwind CSS v4.0
