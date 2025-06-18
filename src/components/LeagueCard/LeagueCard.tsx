@@ -79,14 +79,12 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
             </div>
           </div>
 
-          {league.strLeagueAlternate && (
-            <div className="flex items-center space-x-2 text-sm mb-4 p-3 rounded-lg border border-slate-600/20 league-alternative-bg">
-              <span className="text-slate-500">Alternative:</span>
-              <span className="text-slate-300 font-medium">
-                {league.strLeagueAlternate}
-              </span>
-            </div>
-          )}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mb-4 p-3 rounded-lg border border-slate-600/20 league-alternative-bg">
+            <span className="text-slate-500">Alternative:</span>
+            <span className="text-slate-300 font-medium">
+              {league.strLeagueAlternate || "No information about alternatives"}
+            </span>
+          </div>
 
           {showBadges && (
             <div className="mt-4 pt-4 border-t border-slate-600/30">
