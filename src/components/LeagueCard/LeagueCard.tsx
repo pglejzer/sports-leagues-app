@@ -164,21 +164,23 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
 
                   {badges.length > 1 && (
                     <div className="flex justify-center space-x-2">
-                      {badges.map((badge, index) => (
-                        <button
-                          key={badge.strSeason}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentBadgeIndex(index);
-                          }}
-                          className={`w-2 h-2 rounded-full transition-all duration-200 border ${
-                            index === currentBadgeIndex
-                              ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
-                              : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
-                          }`}
-                          title={`Season ${badges[index].strSeason}`}
-                        />
-                      ))}
+                      {badges
+                        .map((el, i) => ({ ...el, id: i }))
+                        .map((badge, index) => (
+                          <button
+                            key={badge.id}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentBadgeIndex(index);
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all duration-200 border ${
+                              index === currentBadgeIndex
+                                ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
+                                : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
+                            }`}
+                            title={`Season ${badges[index].strSeason}`}
+                          />
+                        ))}
                     </div>
                   )}
                 </div>
