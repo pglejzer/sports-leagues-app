@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { League } from "@/types/league";
 import { useSeasonBadge } from "@/hooks/useSeasonBadge";
 import {
@@ -20,6 +20,10 @@ interface LeagueCardProps {
 export const LeagueCard = ({ league }: LeagueCardProps) => {
   const [showBadges, setShowBadges] = useState(false);
   const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
+  const [preloadedImages, setPreloadedImages] = useState<Set<string>>(
+    new Set()
+  );
+  const dotsContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     data: badges = [],
@@ -34,14 +38,105 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
     }
   };
 
+  const preloadImage = (src: string) => {
+    if (!preloadedImages.has(src)) {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        setPreloadedImages((prev) => new Set([...prev, src]));
+      };
+    }
+  };
+
+  const preloadAdjacentImages = (index: number) => {
+    const prevIndex = index > 0 ? index - 1 : badges.length - 1;
+    const nextIndex = index < badges.length - 1 ? index + 1 : 0;
+
+    if (badges[prevIndex]?.strBadge) {
+      preloadImage(badges[prevIndex].strBadge);
+    }
+    if (badges[nextIndex]?.strBadge) {
+      preloadImage(badges[nextIndex].strBadge);
+    }
+  };
+
+  useEffect(() => {
+    if (badges.length > 0 && currentBadgeIndex < badges.length) {
+      preloadAdjacentImages(currentBadgeIndex);
+    }
+  }, [currentBadgeIndex, badges]);
+
+  const scrollToActiveDot = (index: number) => {
+    if (dotsContainerRef.current) {
+      const container = dotsContainerRef.current;
+      const dots = container.children;
+      const activeDot = dots[index] as HTMLElement;
+
+      if (activeDot) {
+        const containerRect = container.getBoundingClientRect();
+        const dotRect = activeDot.getBoundingClientRect();
+        const scrollLeft =
+          dotRect.left -
+          containerRect.left -
+          containerRect.width / 2 +
+          dotRect.width / 2;
+
+        container.scrollTo({
+          left: container.scrollLeft + scrollLeft,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
   const handlePrevBadge = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentBadgeIndex((prev) => (prev > 0 ? prev - 1 : badges.length - 1));
+    const newIndex =
+      currentBadgeIndex > 0 ? currentBadgeIndex - 1 : badges.length - 1;
+    setCurrentBadgeIndex(newIndex);
+    scrollToActiveDot(newIndex);
   };
 
   const handleNextBadge = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentBadgeIndex((prev) => (prev < badges.length - 1 ? prev + 1 : 0));
+    const newIndex =
+      currentBadgeIndex < badges.length - 1 ? currentBadgeIndex + 1 : 0;
+    setCurrentBadgeIndex(newIndex);
+    scrollToActiveDot(newIndex);
+  };
+
+  const handleDotClick = (index: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentBadgeIndex(index);
+    scrollToActiveDot(index);
+  };
+
+  const getVisibleDots = () => {
+    if (badges.length <= 7) {
+      return badges.map((_, index) => index);
+    }
+
+    const totalDots = badges.length;
+    const maxVisible = 7;
+    const sideCount = Math.floor((maxVisible - 1) / 2);
+
+    let start = Math.max(0, currentBadgeIndex - sideCount);
+    let end = Math.min(totalDots - 1, currentBadgeIndex + sideCount);
+
+    if (end - start + 1 < maxVisible) {
+      if (start === 0) {
+        end = Math.min(totalDots - 1, start + maxVisible - 1);
+      } else {
+        start = Math.max(0, end - maxVisible + 1);
+      }
+    }
+
+    const visibleIndices = [];
+    for (let i = start; i <= end; i++) {
+      visibleIndices.push(i);
+    }
+
+    return visibleIndices;
   };
 
   const currentBadge = badges[currentBadgeIndex];
@@ -82,7 +177,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mb-4 p-3 rounded-lg border border-slate-600/20 league-alternative-bg">
             <span className="text-slate-500">Alternative:</span>
             <span className="text-slate-300 font-medium">
-              {league.strLeagueAlternate || "No information about alternatives"}
+              {league.strLeagueAlternate || "Brak informacji o alternatywach"}
             </span>
           </div>
 
@@ -92,7 +187,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                 <div className="flex items-center justify-center py-8 space-x-3">
                   <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
                   <span className="text-sm text-slate-400">
-                    Loading badges...
+                    Ładowanie odznak...
                   </span>
                 </div>
               )}
@@ -100,7 +195,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
               {error && (
                 <div className="text-center py-6">
                   <p className="text-sm text-red-400">
-                    Failed to load season badges
+                    Nie udało się załadować odznak sezonowych
                   </p>
                 </div>
               )}
@@ -112,7 +207,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                       <div className="flex items-center space-x-2 text-slate-400">
                         <Calendar className="h-4 w-4 text-blue-400" />
                         <span className="text-slate-300">
-                          Season: {currentBadge?.strSeason}
+                          Sezon: {currentBadge?.strSeason}
                         </span>
                       </div>
                       <span className="text-slate-500">
@@ -125,14 +220,14 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                         <button
                           onClick={handlePrevBadge}
                           className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50 league-button-bg"
-                          title="Previous season"
+                          title="Poprzedni sezon"
                         >
                           <ChevronLeft className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
                         </button>
                         <button
                           onClick={handleNextBadge}
                           className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50 league-button-bg"
-                          title="Next season"
+                          title="Następny sezon"
                         >
                           <ChevronRight className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
                         </button>
@@ -147,12 +242,12 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                           width={100}
                           height={100}
                           src={currentBadge.strBadge}
-                          alt={`Season ${currentBadge.strSeason} badge - ${league.strLeague}`}
+                          alt={`Odznaka sezonu ${currentBadge.strSeason} - ${league.strLeague}`}
                           className="max-w-full h-auto max-h-32 mx-auto rounded-lg"
                           fallback={
                             <div className="text-center py-4">
                               <p className="text-sm text-red-400">
-                                Failed to load badge
+                                Nie udało się załadować odznaki
                               </p>
                             </div>
                           }
@@ -163,24 +258,85 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                   </div>
 
                   {badges.length > 1 && (
-                    <div className="flex justify-center space-x-2">
-                      {badges
-                        .map((el, i) => ({ ...el, id: i }))
-                        .map((badge, index) => (
-                          <button
-                            key={badge.id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCurrentBadgeIndex(index);
-                            }}
-                            className={`w-2 h-2 rounded-full transition-all duration-200 border ${
-                              index === currentBadgeIndex
-                                ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
-                                : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
-                            }`}
-                            title={`Season ${badges[index].strSeason}`}
-                          />
-                        ))}
+                    <div className="relative">
+                      {badges.length > 7 && (
+                        <div className="flex items-center justify-center mb-2">
+                          <span className="text-xs text-slate-500 bg-slate-800/50 px-2 py-1 rounded-full">
+                            {badges.length > 7
+                              ? `${currentBadgeIndex + 1} z ${badges.length}`
+                              : ""}
+                          </span>
+                        </div>
+                      )}
+
+                      <div
+                        ref={dotsContainerRef}
+                        className="flex justify-center space-x-2 overflow-x-auto scrollbar-hide pb-2"
+                        style={{
+                          scrollbarWidth: "none",
+                          msOverflowStyle: "none",
+                        }}
+                      >
+                        {badges.length <= 7 ? (
+                          badges.map((badge, index) => (
+                            <button
+                              key={index}
+                              onClick={(e) => handleDotClick(index, e)}
+                              className={`w-2 h-2 rounded-full transition-all duration-200 border flex-shrink-0 ${
+                                index === currentBadgeIndex
+                                  ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
+                                  : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
+                              }`}
+                              title={`Sezon ${badge.strSeason}`}
+                            />
+                          ))
+                        ) : (
+                          <>
+                            {currentBadgeIndex > 3 && (
+                              <>
+                                <button
+                                  onClick={(e) => handleDotClick(0, e)}
+                                  className="w-2 h-2 rounded-full transition-all duration-200 border border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive flex-shrink-0"
+                                  title={`Sezon ${badges[0].strSeason}`}
+                                />
+                                <span className="text-slate-500 text-xs">
+                                  ...
+                                </span>
+                              </>
+                            )}
+
+                            {getVisibleDots().map((index) => (
+                              <button
+                                key={index}
+                                onClick={(e) => handleDotClick(index, e)}
+                                className={`w-2 h-2 rounded-full transition-all duration-200 border flex-shrink-0 ${
+                                  index === currentBadgeIndex
+                                    ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
+                                    : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
+                                }`}
+                                title={`Sezon ${badges[index].strSeason}`}
+                              />
+                            ))}
+
+                            {currentBadgeIndex < badges.length - 4 && (
+                              <>
+                                <span className="text-slate-500 text-xs">
+                                  ...
+                                </span>
+                                <button
+                                  onClick={(e) =>
+                                    handleDotClick(badges.length - 1, e)
+                                  }
+                                  className="w-2 h-2 rounded-full transition-all duration-200 border border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive flex-shrink-0"
+                                  title={`Sezon ${
+                                    badges[badges.length - 1].strSeason
+                                  }`}
+                                />
+                              </>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -190,7 +346,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                 <div className="text-center py-8 space-y-3">
                   <Sparkles className="h-8 w-8 text-gray-500 mx-auto opacity-50" />
                   <p className="text-sm text-slate-500">
-                    No season badges available
+                    Brak dostępnych odznak sezonowych
                   </p>
                 </div>
               )}
