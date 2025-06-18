@@ -1,5 +1,4 @@
 @layer components {
-  /* Card Components */
   .card-base {
     @apply relative overflow-hidden rounded-xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm transition-all duration-200;
   }
@@ -12,7 +11,69 @@
     @apply cursor-pointer transform hover:scale-[1.01] active:scale-[0.99];
   }
 
-  /* Input Components */
+  .league-card-glassmorphism {
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.9) 0%,
+      rgba(30, 41, 59, 0.9) 100%
+    );
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .league-card-hover-overlay {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.1) 0%,
+      rgba(147, 51, 234, 0.1) 100%
+    );
+  }
+
+  .league-icon-gradient {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.2) 0%,
+      rgba(147, 51, 234, 0.2) 100%
+    );
+  }
+
+  .league-icon-blur {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.5) 0%,
+      rgba(147, 51, 234, 0.5) 100%
+    );
+  }
+
+  .league-alternative-bg {
+    background: rgba(15, 23, 42, 0.5);
+  }
+
+  .league-button-bg {
+    background: rgba(15, 23, 42, 0.5);
+  }
+
+  .league-badge-blur {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.3) 0%,
+      rgba(147, 51, 234, 0.3) 100%
+    );
+  }
+
+  .league-dot-active {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.8) 0%,
+      rgba(147, 51, 234, 0.8) 100%
+    );
+  }
+
+  .league-dot-inactive {
+    background: rgba(71, 85, 105, 0.6);
+  }
+
   .input-base {
     @apply block w-full rounded-lg border border-slate-700/50 bg-slate-800/50 px-4 py-3 text-white placeholder-slate-400 backdrop-blur-sm transition-all duration-200;
   }
@@ -29,12 +90,10 @@
     @apply pr-11;
   }
 
-  /* Select Components */
   .select-base {
     @apply appearance-none cursor-pointer;
   }
 
-  /* Icon Containers */
   .icon-container {
     @apply absolute inset-y-0 flex items-center pointer-events-none;
   }
@@ -55,7 +114,6 @@
     @apply text-blue-400;
   }
 
-  /* League Card Specific */
   .league-card {
     @apply relative overflow-hidden rounded-xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm transition-all duration-200 hover:border-slate-600/50 hover:bg-slate-800/70 hover:shadow-lg cursor-pointer transform hover:scale-[1.01] active:scale-[0.99];
   }
@@ -108,7 +166,6 @@
     @apply text-slate-300 font-medium;
   }
 
-  /* Badges Section */
   .badges-section {
     @apply mt-4 pt-4 border-t border-slate-700/50;
   }
@@ -157,7 +214,6 @@
     @apply bg-blue-500 scale-125;
   }
 
-  /* Loading and Error States */
   .loading-container {
     @apply flex items-center justify-center py-16;
   }
@@ -214,17 +270,14 @@
     @apply text-slate-500;
   }
 
-  /* Grid Layout */
   .leagues-grid {
     @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
   }
 
-  /* Responsive Design */
   .responsive-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Animation Classes */
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
   }
@@ -234,7 +287,6 @@
   }
 }
 
-/* Custom Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -49,45 +49,20 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
   return (
     <div className="w-full">
       <div
-        className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 transform-gpu hover:scale-[1.02] hover:shadow-2xl border border-slate-600/30 hover:border-blue-500/50 group"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%)",
-          backdropFilter: "blur(20px)",
-          boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
-        }}
+        className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 transform-gpu hover:scale-[1.02] hover:shadow-2xl border border-slate-600/30 hover:border-blue-500/50 group league-card-glassmorphism"
         onClick={handleCardClick}
       >
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)",
-          }}
-        />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl league-card-hover-overlay" />
 
         <div className="p-6 relative z-10">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <div
-                className="relative p-3 rounded-xl transition-all duration-300 group-hover:scale-110 border border-blue-500/30 group-hover:border-blue-500/50"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%)",
-                }}
-              >
+              <div className="relative p-3 rounded-xl transition-all duration-300 group-hover:scale-110 border border-blue-500/30 group-hover:border-blue-500/50 league-icon-gradient">
                 <Trophy className="h-5 w-5 text-blue-400" />
-                <div
-                  className="absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-300"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(59, 130, 246, 0.5) 0%, rgba(147, 51, 234, 0.5) 100%)",
-                  }}
-                />
+                <div className="absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-300 league-icon-blur" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1 transition-colors duration-300 group-hover:text-blue-300">
+                <h3 className="text-sm font-semibold text-white mb-1 transition-colors duration-300 group-hover:text-blue-300">
                   {league.strLeague}
                 </h3>
                 <p className="text-sm text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
@@ -105,10 +80,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
           </div>
 
           {league.strLeagueAlternate && (
-            <div
-              className="flex items-center space-x-2 text-sm mb-4 p-3 rounded-lg border border-slate-600/20"
-              style={{ background: "rgba(15, 23, 42, 0.5)" }}
-            >
+            <div className="flex items-center space-x-2 text-sm mb-4 p-3 rounded-lg border border-slate-600/20 league-alternative-bg">
               <span className="text-slate-500">Alternative:</span>
               <span className="text-slate-300 font-medium">
                 {league.strLeagueAlternate}
@@ -137,35 +109,31 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
 
               {badges.length > 0 && !isLoading && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 text-sm text-slate-400">
-                      <Calendar className="h-4 w-4 text-blue-400" />
-                      <span className="text-slate-300">
-                        Season: {currentBadge?.strSeason}
-                      </span>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex items-center justify-between sm:justify-start sm:space-x-2 text-sm">
+                      <div className="flex items-center space-x-2 text-slate-400">
+                        <Calendar className="h-4 w-4 text-blue-400" />
+                        <span className="text-slate-300">
+                          Season: {currentBadge?.strSeason}
+                        </span>
+                      </div>
                       <span className="text-slate-500">
                         ({currentBadgeIndex + 1}/{badges.length})
                       </span>
                     </div>
 
                     {badges.length > 1 && (
-                      <div className="flex items-center space-x-1">
+                      <div className="flex items-center justify-center sm:justify-end space-x-1">
                         <button
                           onClick={handlePrevBadge}
-                          className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50"
-                          style={{
-                            background: "rgba(15, 23, 42, 0.5)",
-                          }}
+                          className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50 league-button-bg"
                           title="Previous season"
                         >
                           <ChevronLeft className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
                         </button>
                         <button
                           onClick={handleNextBadge}
-                          className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50"
-                          style={{
-                            background: "rgba(15, 23, 42, 0.5)",
-                          }}
+                          className="p-2 rounded-lg transition-all duration-200 hover:scale-110 border border-slate-600/30 hover:border-blue-500/50 league-button-bg"
                           title="Next season"
                         >
                           <ChevronRight className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
@@ -189,13 +157,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                             </div>
                           }
                         />
-                        <div
-                          className="absolute inset-0 rounded-lg blur-xl opacity-50 -z-10"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.3) 100%)",
-                          }}
-                        />
+                        <div className="absolute inset-0 rounded-lg blur-xl opacity-50 -z-10 league-badge-blur" />
                       </div>
                     )}
                   </div>
@@ -211,15 +173,9 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                           }}
                           className={`w-2 h-2 rounded-full transition-all duration-200 border ${
                             index === currentBadgeIndex
-                              ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
-                              : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50"
+                              ? "scale-125 border-blue-500/80 shadow-[0_0_10px_rgba(59,130,246,0.5)] league-dot-active"
+                              : "border-slate-600/30 hover:scale-125 hover:border-blue-500/50 league-dot-inactive"
                           }`}
-                          style={{
-                            background:
-                              index === currentBadgeIndex
-                                ? "linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(147, 51, 234, 0.8) 100%)"
-                                : "rgba(71, 85, 105, 0.6)",
-                          }}
                           title={`Season ${badges[index].strSeason}`}
                         />
                       ))}
