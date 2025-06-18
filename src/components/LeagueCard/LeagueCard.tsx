@@ -150,7 +150,7 @@ export const LeagueCard = ({ league }: LeagueCardProps) => {
                           height={100}
                           src={currentBadge.strBadge}
                           alt={`Season ${currentBadge.strSeason} badge - ${league.strLeague}`}
-                          className="max-w-full h-auto max-h-32 mx-auto rounded-lg shadow-lg"
+                          className="max-w-full h-auto max-h-32 mx-auto rounded-lg"
                           fallback={
                             <div className="text-center py-4">
                               <p className="text-sm text-red-400">
